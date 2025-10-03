@@ -6,9 +6,20 @@
   const cfg = window.SITE_CONFIG || {};
   const idx = window.SITE_INDEX || { complaints: [], principles: [], assessments: [] };
 
+  // Detect if running locally or on GitHub Pages
+  const isLocal = window.location.protocol === 'file:' ||
+                  window.location.hostname === 'localhost' ||
+                  window.location.hostname === '127.0.0.1';
+
   function baseRawUrl() {
-    const { owner, repo, branch } = cfg;
-    return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
+    if (isLocal) {
+      // When running locally, files are relative to the docs folder
+      return '../';
+    } else {
+      // When on GitHub Pages, fetch from raw.githubusercontent.com
+      const { owner, repo, branch } = cfg;
+      return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
+    }
   }
 
   function showNotice(msg) {
@@ -18,9 +29,16 @@
   function hideNotice() { noticeEl.style.display = 'none'; }
 
   async function fetchMarkdown(path) {
-    // Encode each path segment separately to handle spaces and special characters
-    const encodedPath = path.split('/').map(segment => encodeURIComponent(segment)).join('/');
-    const url = baseRawUrl() + encodedPath;
+    let url;
+    if (isLocal) {
+      // For local server, use relative paths
+      url = baseRawUrl() + path;
+    } else {
+      // For GitHub, encode each path segment separately to handle spaces and special characters
+      const encodedPath = path.split('/').map(segment => encodeURIComponent(segment)).join('/');
+      url = baseRawUrl() + encodedPath;
+    }
+
     const res = await fetch(url);
     if (!res.ok) {
       throw new Error(`Fetch failed (${res.status}) for ${path}`);
