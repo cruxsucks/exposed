@@ -13,12 +13,12 @@
 
   function baseRawUrl() {
     if (isLocal) {
-      // When running locally, files are relative to the docs folder
-      return '../';
+      // When running locally, files are in the same directory structure
+      return './';
     } else {
       // When on GitHub Pages, fetch from raw.githubusercontent.com
       const { owner, repo, branch } = cfg;
-      return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
+      return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/docs/`;
     }
   }
 
