@@ -5,44 +5,58 @@ window.SITE_INDEX = {
   // NZMC Complaints
   complaints: [
     {
+      key: 'procedural-rules',
+      number: 'Procedural Rules',
+      title: 'Procedural Rules & Compliance Status',
+      path: 'NZMC Complaints/Procedural Rules.md',
+      nzmcUrl: '',
+      cruxUrl: '',
+      cruxArticleTitle: ''
+    },
+    {
       key: '2891',
       number: '2891',
-      title: 'QLDC Contractors',
+      title: 'Queenstown Lakes District Council Against Crux',
       path: 'NZMC Complaints/2891.md',
       nzmcUrl: 'https://www.mediacouncil.org.nz/rulings/case-2891',
-      cruxUrl: ''
+      cruxUrl: 'https://crux.org.nz/crux-news/wide-body-jets-for-wanaka-referenced-in-qldc-documents',
+      cruxArticleTitle: 'Wide body jets for Wanaka referenced in QLDC documents'
     },
     {
       key: '2895',
       number: '2895',
-      title: 'Jimmy Carling',
+      title: 'Jimmy Carling Against Crux',
       path: 'NZMC Complaints/2895.md',
       nzmcUrl: 'https://www.mediacouncil.org.nz/rulings/case-2895',
-      cruxUrl: ''
+      cruxUrl: 'https://crux.org.nz/crux-news/qldc-contractors-388672685-in-3-years',
+      cruxArticleTitle: 'QLDC contractors – $388,672,685 in 3 years. We focus on ZQN.7'
     },
     {
       key: '2940',
       number: '2940',
-      title: 'Wide Body Jets',
+      title: 'Queenstown Airport Corporation Against Crux',
       path: 'NZMC Complaints/2940.md',
       nzmcUrl: 'https://www.mediacouncil.org.nz/rulings/case-2940',
-      cruxUrl: ''
+      cruxUrl: 'https://crux.org.nz/crux-news/airport-risks-bank-limits-over-redundant-200-million-land-purchase',
+      cruxArticleTitle: 'Airport risks bank limits over redundant $200 million land purchase'
     },
     {
       key: '3012',
       number: '3012',
-      title: 'QLDC Election',
+      title: 'Jendi Paterson Against Crux',
       path: 'NZMC Complaints/3012.md',
       nzmcUrl: 'https://www.mediacouncil.org.nz/rulings/case-3012',
-      cruxUrl: ''
+      cruxUrl: '',
+      cruxArticleTitle: 'You be the judge: Is QLDC telling the truth over how it spends your money? (Article deleted)'
     },
     {
       key: '3356',
       number: '3356',
-      title: 'QLDC Election 2',
+      title: 'Andrew Tipene Against Crux Publishing',
       path: 'NZMC Complaints/3356.md',
       nzmcUrl: 'https://www.mediacouncil.org.nz/rulings/case-3356',
-      cruxUrl: ''
+      cruxUrl: 'https://crux.org.nz/crux-news/crux-story-found-to-be-inaccurate-and-misleading',
+      cruxArticleTitle: 'Crux story found to be inaccurate and misleading (Correction article)'
     }
   ],
 
@@ -141,6 +155,76 @@ window.SITE_INDEX = {
       path: 'Assessment_articles/251001 Crux - Data Shows Guy and Lewers Making Personal Attacks_Review.md',
       articlePath: 'Crux Articles/251001 Crux - Data Shows Guy and Lewers Making Personal Attacks.md',
       principles: ['p1', 'p4', 'p6']
+    },
+    {
+      key: '250924-fb-glen-lewers',
+      title: '250924 - FB Glen Lewers',
+      path: 'Assessment_articles/250924 FB - Glen Lewers_Review.md',
+      articlePath: 'Crux Articles/250924 FB - Glen Lewers.md',
+      principles: ['p1', 'p4']
+    },
+    {
+      key: '250926-fb-lewers-misinformation',
+      title: '250926 - FB Lewers claims misinformation',
+      path: 'Assessment_articles/250926_FB_Lewers_claims_misinformation_Guy_resorts_to_insults_Wong_says_Lewers_is_right_Review.md',
+      articlePath: null,
+      principles: ['p1', 'p4']
+    },
+    {
+      key: '250927-fb-crux-posing',
+      title: '250927 - FB CRUX Posing Article',
+      path: 'Assessment_articles/250927 FB CRUX - Posing Article_Review.md',
+      articlePath: 'Crux Articles/250927 FB CRUX - Posing Article.md',
+      principles: ['p1', 'p4']
+    },
+    {
+      key: '250927-fb-lisa-guy-conflict',
+      title: '250927 - FB Lisa Guy undeclared conflict',
+      path: 'Assessment_articles/250927_FB_Lisa_Guys_undeclared_conflict_could_derail_QLDC_1_billion_water_CCO_Review.md',
+      articlePath: null,
+      principles: ['p1', 'p10']
+    },
+    {
+      key: '250929-fb-alexa-forbes',
+      title: '250929 - FB Councillor Alexa Forbes',
+      path: 'Assessment_articles/250929 FB Councillor Alexa Forbes_Review.md',
+      articlePath: 'Crux Articles/250929 FB Councillor Alexa Forbes.md',
+      principles: ['p1', 'p4']
+    },
+    {
+      key: '250930-fb-glyn-lewers',
+      title: '250930 - FB Glyn Lewers QLDC Mayor',
+      path: 'Assessment_articles/250930 FB Glyn Lewers QLDC Mayor_Review.md',
+      articlePath: 'Crux Articles/250930 FB Glyn Lewers QLDC Mayor.md',
+      principles: ['p1', 'p4']
+    },
+    {
+      key: '251002-fb-barry-bruce-1',
+      title: '251002 - FB Barry Bruce launches attack',
+      path: 'Assessment_articles/251002_FB_Wanaka_Councillor_Barry_Bruce_launches_attack_on_John_Glover_Review.md',
+      articlePath: null,
+      principles: ['p1', 'p4']
+    },
+    {
+      key: '251002-fb-barry-bruce-2',
+      title: '251002 - FB Wanakas Barry Bruce launches attack',
+      path: 'Assessment_articles/251002_FB_Wanakas_Councillor_Barry_Bruce_launches_attack_on_John_Glover_Review.md',
+      articlePath: null,
+      principles: ['p1', 'p4']
+    },
+    {
+      key: '251003-fb-election-poll',
+      title: '251003 - FB Upsets on the way final poll',
+      path: 'Assessment_articles/251003_FB_Upsets_on_the_way_final_Crux_election_poll_results_Review.md',
+      articlePath: null,
+      principles: ['p1', 'p4']
+    },
+    {
+      key: 'fb-qldc-consultants',
+      title: 'Facebook CRUX Comments on QLDC Consultants',
+      path: 'Assessment_articles/Facebook CRUX Comments on QLDC Consultants_Review.md',
+      articlePath: 'Crux Articles/220810 Facebook Post - QLDC Engineer $448k Consulting Deal.md',
+      principles: ['p1', 'p4']
     }
   ]
 };

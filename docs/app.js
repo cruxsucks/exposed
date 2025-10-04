@@ -52,13 +52,14 @@
       hideNotice();
       mainEl.innerHTML = '<p class="muted">Loading…</p>';
       const md = await fetchMarkdown(complaint.path);
-      const content = marked.parse(md);
+      const content = marked.parse(stripFrontmatter(md));
 
       mainEl.innerHTML = `
         <h1 class="section-title">NZMC Complaint ${complaint.number}</h1>
         <div class="complaint-links">
-          ${complaint.nzmcUrl ? `<a href="${complaint.nzmcUrl}" target="_blank" class="btn">View NZMC Complaint</a>` : ''}
-          ${complaint.cruxUrl ? `<a href="${complaint.cruxUrl}" target="_blank" class="btn btn-secondary">View Crux Article</a>` : ''}
+          ${complaint.nzmcUrl ? `<p><a href="${complaint.nzmcUrl}" target="_blank" class="text-link">View original complaint on Media Council website</a></p>` : ''}
+          ${complaint.cruxUrl ? `<p><a href="${complaint.cruxUrl}" target="_blank" class="text-link">${complaint.cruxArticleTitle || 'View Crux correction/response'}</a></p>` : ''}
+          ${!complaint.cruxUrl && complaint.cruxArticleTitle ? `<p class="muted">${complaint.cruxArticleTitle}</p>` : ''}
         </div>
         <div class="card">
           <h3>Summary</h3>
@@ -122,6 +123,93 @@
     }
   }
 
+  // Extract URL from markdown content
+  function extractUrlFromMarkdown(markdown) {
+    // Look for URLs in markdown - try to find the first http/https link
+    const urlMatch = markdown.match(/https?:\/\/[^\s\)]+/);
+    return urlMatch ? urlMatch[0] : null;
+  }
+
+  // Extract metadata from markdown frontmatter or content
+  function extractMetadata(markdown) {
+    const metadata = {
+      date: null,
+      title: null,
+      outlet: 'Crux'
+    };
+
+    // Check for YAML frontmatter
+    const frontmatterMatch = markdown.match(/^---\s*\n([\s\S]*?)\n---/);
+    if (frontmatterMatch) {
+      const frontmatter = frontmatterMatch[1];
+
+      // Extract date_published
+      const dateMatch = frontmatter.match(/date_published:\s*(.+)/);
+      if (dateMatch) {
+        metadata.date = dateMatch[1].trim();
+      }
+
+      // Extract outlet
+      const outletMatch = frontmatter.match(/outlet:\s*(.+)/);
+      if (outletMatch) {
+        metadata.outlet = outletMatch[1].trim();
+      }
+    }
+
+    // If no frontmatter, try to extract from content format:
+    // Line 1: URL
+    // Line 2: Title
+    // Line 3: by Author - Date
+    if (!metadata.date || !metadata.title) {
+      const lines = markdown.split('\n');
+
+      // Extract title from line 2 (after URL)
+      if (lines.length > 1 && lines[1].trim()) {
+        metadata.title = lines[1].trim();
+      }
+
+      // Extract date from line 3 (format: "by Author - Sep 03, 2025")
+      if (lines.length > 2) {
+        const byLineMatch = lines[2].match(/by .+ - (.+)/);
+        if (byLineMatch) {
+          metadata.date = byLineMatch[1].trim();
+        }
+      }
+    }
+
+    // Fallback: Extract title from first H1 or H2
+    if (!metadata.title) {
+      const titleMatch = markdown.match(/^#{1,2}\s+(.+)$/m);
+      if (titleMatch) {
+        metadata.title = titleMatch[1].trim();
+      }
+    }
+
+    return metadata;
+  }
+
+  // Format date nicely
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    try {
+      // Try to parse the date - handles both "Sep 03, 2025" and ISO formats
+      const date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleDateString('en-NZ', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+      // If parsing fails, return the original string
+      return dateStr;
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
+  // Remove YAML frontmatter from markdown content
+  function stripFrontmatter(markdown) {
+    // Remove YAML frontmatter (--- ... ---)
+    return markdown.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
+  }
+
   // Layout 3: Assessment Layout
   async function renderAssessment(assessment) {
     try {
@@ -134,17 +222,44 @@
         fetchMarkdown(assessment.path)
       ]);
 
-      const articleContent = articleMd ? marked.parse(articleMd) : '';
-      const reviewContent = marked.parse(reviewMd);
+      const articleContent = articleMd ? marked.parse(stripFrontmatter(articleMd)) : '';
+      const reviewContent = marked.parse(stripFrontmatter(reviewMd));
+
+      // Extract metadata from the article
+      const metadata = articleMd ? extractMetadata(articleMd) : {};
+      const cruxUrl = articleMd ? extractUrlFromMarkdown(articleMd) : null;
+
+      // Create article preview box with iframe thumbnail
+      const thumbnailHtml = cruxUrl ? `
+        <div class="article-preview">
+          <div class="article-preview-thumbnail">
+            <iframe src="${cruxUrl}"
+                    scrolling="no"
+                    sandbox="allow-same-origin"
+                    title="Article preview"
+                    onload="this.style.opacity='1';"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            </iframe>
+            <div class="thumbnail-fallback">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="9" x2="15" y2="9"></line>
+                <line x1="9" y1="13" x2="15" y2="13"></line>
+                <line x1="9" y1="17" x2="13" y2="17"></line>
+              </svg>
+              <p>Crux Article</p>
+            </div>
+          </div>
+          <div class="article-preview-info">
+            ${metadata.date ? `<p class="article-date">${formatDate(metadata.date)}</p>` : ''}
+            ${metadata.title ? `<h3 class="article-title">${metadata.title}</h3>` : '<h3 class="article-title">Original Crux Article</h3>'}
+            <a href="${cruxUrl}" target="_blank" class="article-url">${cruxUrl}</a>
+          </div>
+        </div>
+      ` : '';
 
       mainEl.innerHTML = `
-        <h1 class="section-title">${assessment.title}</h1>
-        ${articleContent ? `
-          <div class="assessment-frame">
-            <h3>Original Article</h3>
-            ${articleContent}
-          </div>
-        ` : ''}
+        ${thumbnailHtml}
         <div class="card">
           <h3>Assessment / Review</h3>
           ${reviewContent}
